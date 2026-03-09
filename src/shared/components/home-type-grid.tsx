@@ -42,7 +42,7 @@ export function HomeTypeGrid() {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
       {availableTypes.map((type) => {
         const gradientClass = TYPE_GRADIENT[type.name] ?? TYPE_GRADIENT.normal;
         const description = TYPE_DESCRIPTION[type.name] ?? "Explore this type";
@@ -62,7 +62,7 @@ export function HomeTypeGrid() {
         return (
           <Link key={type.name} href={`/types/${type.name}`} className="block">
             <Card
-              className="group relative flex min-h-150 flex-col overflow-hidden rounded-2xl border-none shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">
+              className="group relative flex min-h-150 flex-col overflow-hidden rounded-lg border-none shadow-sm transition-all hover:shadow-xl">
               <div className={`absolute inset-0 bg-linear-to-br ${gradientClass}`}/>
               <img
                 src={getTypeArtworkUrl(type.name)}

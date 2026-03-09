@@ -15,13 +15,13 @@ export function TypePageSearch({
   return (
     <div className="max-w-md">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-white/70" />
+        <Search className="absolute  left-3 top-1/2 -translate-y-1/2 h-5 w-5" />
         <Input
           type="text"
           placeholder="Search Pokémon by name..."
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-11 h-12 text-base bg-white/20 backdrop-blur-sm border-white/30 text-white placeholder:text-white/60 focus:bg-white/30 focus:border-white/50"
+          className="pl-10 h-12 bg-white/20 border-none placeholder:text-white/50 text-white focus:ring-0 focus-visible:ring-0 drop-shadow-md"
         />
       </div>
       {searchTerm && resultCount !== undefined && (

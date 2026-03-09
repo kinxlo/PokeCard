@@ -1,10 +1,8 @@
 "use client";
 
-import {use, useState, useEffect} from "react";
+import {use} from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {TypeSidebar} from "@/shared/components";
-import {Button} from "@/shared/components/ui/button";
 import {useGetPokemonDetail} from "@/shared/services/app/app.query";
 import {Skeleton} from "@/shared/components/ui/skeleton";
 import {
@@ -18,7 +16,7 @@ import {
   getSpriteUrl
 } from "@/lib/pokemon-utils";
 import {TYPE_GRADIENT} from "@/lib/constants";
-import {ArrowLeft, Heart, Share2, Ruler, Weight, Zap, Menu, X} from "lucide-react";
+import {ArrowLeft, Heart, Share2, Ruler, Weight, Zap} from "lucide-react";
 
 interface PageProps {
   params: Promise<{ name: string }>;
@@ -27,41 +25,19 @@ interface PageProps {
 export default function PokemonDetailPage({params}: PageProps) {
   const resolvedParams = use(params);
   const pokemonName = resolvedParams.name;
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const {data: pokemon, isLoading} = useGetPokemonDetail(pokemonName);
 
-  useEffect(() => {
-    if (!isMobileSidebarOpen) return;
-
-    const onEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsMobileSidebarOpen(false);
-      }
-    };
-
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onEscape);
-
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onEscape);
-    };
-  }, [isMobileSidebarOpen]);
-
   if (isLoading) {
     return (
-      <div className="flex h-full">
-        <TypeSidebar/>
-        <div className="flex-1 overflow-y-auto">
-          <div className="h-72 bg-linear-to-br from-primary/20 to-primary/5 animate-pulse"/>
-          <div className="max-w-6xl mx-auto px-6 -mt-32">
-            <Skeleton className="h-64 w-64 rounded-3xl mx-auto mb-8"/>
-            <div className="grid md:grid-cols-3 gap-6">
-              <Skeleton className="h-64"/>
-              <Skeleton className="h-64"/>
-              <Skeleton className="h-64"/>
-            </div>
+      <div className="flex-1 overflow-y-auto">
+        <div className="h-72 bg-linear-to-br from-primary/20 to-primary/5 animate-pulse"/>
+        <div className="max-w-6xl mx-auto px-6 -mt-32">
+          <Skeleton className="h-64 w-64 rounded-3xl mx-auto mb-8"/>
+          <div className="grid md:grid-cols-3 gap-6">
+            <Skeleton className="h-64"/>
+            <Skeleton className="h-64"/>
+            <Skeleton className="h-64"/>
           </div>
         </div>
       </div>
@@ -70,20 +46,17 @@ export default function PokemonDetailPage({params}: PageProps) {
 
   if (!pokemon) {
     return (
-      <div className="flex h-full">
-        <TypeSidebar/>
-        <div className="flex-1 overflow-y-auto p-6">
-          <div className="max-w-4xl mx-auto text-center py-20">
-            <h2 className="text-2xl font-bold mb-4">Pokémon not found</h2>
-            <p className="text-muted-foreground mb-8">This Pokémon doesn't exist in our database.</p>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-            >
-              <ArrowLeft className="h-4 w-4"/>
-              Return to homepage
-            </Link>
-          </div>
+      <div className="flex-1 overflow-y-auto p-6">
+        <div className="max-w-4xl mx-auto text-center py-20">
+          <h2 className="text-2xl font-bold mb-4">Pokémon not found</h2>
+          <p className="text-muted-foreground mb-8">This Pokémon doesn't exist in our database.</p>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4"/>
+            Return to homepage
+          </Link>
         </div>
       </div>
     );
@@ -99,49 +72,29 @@ export default function PokemonDetailPage({params}: PageProps) {
   const officialArtwork = pokemon.sprites.other?.["official-artwork"]?.front_default || mainSprite;
 
   return (
-    <>
-      <div className="flex h-full">
-        {/* Sidebar (desktop only) */}
-        <div className="hidden md:block">
-          <TypeSidebar/>
-        </div>
+    <div className="flex-1 overflow-y-auto relative">
+      {/* Background Sprite - Bottom Right */}
+      <div className="fixed -bottom-50 right-0 pointer-events-none z-0 opacity-5 dark:opacity-10">
+        <Image
+          src={mainSprite}
+          alt=""
+          width={800}
+          height={800}
+          className="object-contain mix-blend-multiply dark:mix-blend-screen"
+          unoptimized
+          aria-hidden="true"
+        />
+      </div>
 
-        <div className="flex-1 overflow-y-auto relative">
-          {/* Mobile drawer trigger */}
-          <div className="md:hidden border-b bg-card px-4 py-3 sticky top-0 z-20">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsMobileSidebarOpen(true)}
-              className="gap-2"
-            >
-              <Menu className="h-4 w-4"/>
-              Browse Types
-            </Button>
-          </div>
-
-          {/* Background Sprite - Bottom Right */}
-          <div className="fixed -bottom-50 right-0 pointer-events-none z-0 opacity-5 dark:opacity-10">
-            <Image
-              src={mainSprite}
-              alt=""
-              width={800}
-              height={800}
-              className="object-contain mix-blend-multiply dark:mix-blend-screen"
-              unoptimized
-              aria-hidden="true"
-            />
-          </div>
-
-          <div className="max-w-7xl mx-auto p-8 relative z-10">
-            {/* Breadcrumb */}
-            <Link
-              href="/"
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
-            >
-              <ArrowLeft className="h-4 w-4"/>
-              Back to All Pokémon
-            </Link>
+      <div className="max-w-7xl mx-auto p-8 relative z-10">
+        {/* Breadcrumb */}
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+        >
+          <ArrowLeft className="h-4 w-4"/>
+          Back to All Pokémon
+        </Link>
 
             {/* Header Section */}
             <div className="mb-8">
@@ -239,7 +192,7 @@ export default function PokemonDetailPage({params}: PageProps) {
                 </div>
 
                 {/* Abilities */}
-                <div className="bg-card/50 backdrop-blur-md border rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div className="bg-card/80 backdrop-blur-md border rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
                   <h2 className="text-xl font-black mb-4 flex items-center gap-2">
                     <div className="w-1.5 h-7 bg-primary rounded-full"/>
                     Abilities
@@ -267,7 +220,7 @@ export default function PokemonDetailPage({params}: PageProps) {
               {/* Right Column - Stats and Moves */}
               <div className="space-y-6">
                 {/* Base Stats */}
-                <div className="bg-card/50 backdrop-blur-md border rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div className="bg-card/80 backdrop-blur-md border rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-black flex items-center gap-2">
                       <div className="w-1.5 h-7 bg-primary rounded-full"/>
@@ -298,7 +251,7 @@ export default function PokemonDetailPage({params}: PageProps) {
                 </div>
 
                 {/* Moves */}
-                <div className="bg-card/50 backdrop-blur-md border rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div className="bg-card/80 backdrop-blur-md border rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
                   <h2 className="text-xl font-black mb-4 flex items-center gap-2">
                     <div className="w-1.5 h-7 bg-primary rounded-full"/>
                     Moves
@@ -326,37 +279,6 @@ export default function PokemonDetailPage({params}: PageProps) {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Mobile sidebar drawer */}
-      {isMobileSidebarOpen && (
-        <div className="fixed inset-0 z-50 md:hidden" role="dialog" aria-modal="true" aria-label="Type sidebar drawer">
-          <button
-            type="button"
-            aria-label="Close type sidebar"
-            className="absolute inset-0 bg-black/50"
-            onClick={() => setIsMobileSidebarOpen(false)}
-          />
-          <div className="relative h-full w-72 max-w-[85vw] bg-card shadow-xl">
-            <div className="flex items-center justify-between border-b px-4 py-3">
-              <p className="text-sm font-semibold">Browse Types</p>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsMobileSidebarOpen(false)}
-                aria-label="Close drawer"
-              >
-                <X className="h-4 w-4"/>
-              </Button>
-            </div>
-            <TypeSidebar
-              className="w-full border-r-0"
-              onNavigate={() => setIsMobileSidebarOpen(false)}
-            />
-          </div>
-        </div>
-      )}
-    </>
-  );
+    );
 }
 

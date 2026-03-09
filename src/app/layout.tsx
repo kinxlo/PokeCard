@@ -19,10 +19,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PokéDex Explorer | Browse Pokémon by Type",
+  title: "PokéCARDS Explorer | Browse Pokémon by Type",
   description:
-    "Explore Pokémon by type, search by name, and view detailed stats. Inspired by OpenWatch.ng's clean, data-focused design.",
-  keywords: ["pokemon", "pokedex", "types", "stats", "abilities", "pokeapi"],
+    "Explore Pokémon by type, search by name, and view detailed stats." +
+    " Discover strengths, weaknesses, and more with our interactive PokéCARDS Explorer.",
+
 };
 
 export default function RootLayout({children,}: Readonly<{ children: ReactNode }>) {
@@ -31,7 +32,7 @@ export default function RootLayout({children,}: Readonly<{ children: ReactNode }
     <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
       <QueryProvider>
-        <div className="flex flex-col h-screen">
+        <div className="flex flex-col h-screen p-2 space-y-2">
           <AppHeader/>
           <main className="flex-1 overflow-hidden">
             {children}

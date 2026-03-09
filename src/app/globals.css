@@ -122,3 +122,7 @@ body {
   background: var(--color-primary);
 }
 
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

@@ -27,7 +27,7 @@ export function TypeSidebar({className, onNavigate}: TypeSidebarProps) {
   if (isLoading) {
     return (
       <aside className={cn(
-        "border-r bg-card h-full overflow-y-auto",
+        " bg-card h-full overflow-y-auto rounded-lg",
         layout.sidebar.width,
         className
       )}>
@@ -50,7 +50,7 @@ export function TypeSidebar({className, onNavigate}: TypeSidebarProps) {
 
   return (
     <aside className={cn(
-      "border-r bg-card h-full overflow-y-auto",
+      " bg-card h-full overflow-y-auto hide-scrollbar rounded-lg",
       layout.sidebar.width,
       className
     )}>
