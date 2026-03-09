@@ -81,18 +81,18 @@ export function HomeTypeGrid() {
                   <img alt={`img`} src={image}/>
                 </div>
               </CardHeader>
-              <CardContent className="relative z-10 pt-0">
-                <div className="mt-4 grid grid-cols-2 gap-3 text-sm font-bold">
-                  <div
-                    className="rounded-lg  px-3 py-2 text-white  backdrop-blur-sm bg-black/40">Pokemon: {pokemonCount}</div>
-                  <div
-                    className="rounded-lg   px-3 py-2 text-white  backdrop-blur-sm bg-black/40">Moves: {moveCount}</div>
-                  <div
-                    className="rounded-lg   px-3 py-2 text-white  backdrop-blur-sm bg-black/40">{generationLabel}</div>
-                  <div
-                    className="rounded-lg   px-3 py-2 text-white  backdrop-blur-sm bg-black/40">{moveClass}</div>
-                </div>
-              </CardContent>
+              {/*<CardContent className="relative z-10 pt-0">*/}
+              {/*  <div className="mt-4 grid grid-cols-2 gap-3 text-sm font-bold">*/}
+              {/*    <div*/}
+              {/*      className="rounded-lg  px-3 py-2 text-white  backdrop-blur-sm bg-black/40">Pokemon: {pokemonCount}</div>*/}
+              {/*    <div*/}
+              {/*      className="rounded-lg   px-3 py-2 text-white  backdrop-blur-sm bg-black/40">Moves: {moveCount}</div>*/}
+              {/*    <div*/}
+              {/*      className="rounded-lg   px-3 py-2 text-white  backdrop-blur-sm bg-black/40">{generationLabel}</div>*/}
+              {/*    <div*/}
+              {/*      className="rounded-lg   px-3 py-2 text-white  backdrop-blur-sm bg-black/40">{moveClass}</div>*/}
+              {/*  </div>*/}
+              {/*</CardContent>*/}
               <CardFooter className="relative z-10 mt-auto items-start justify-start p-6">
                 <div className="w-full space-y-2 text-xs text-white/90 drop-shadow-md">
                   {/* Strong Against */}
