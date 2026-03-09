@@ -7,15 +7,11 @@ import {Skeleton} from "@/shared/components/ui/skeleton";
 import {useGetTypes} from "@/shared/services/app/app.query";
 import type {TypeDetailResponse} from "@/shared/services/app/app.types";
 import {TYPE_ARTWORK_ID, TYPE_DESCRIPTION, TYPE_GRADIENT} from "@/lib/constants";
+import {getTypeArtworkUrl} from "@/lib/pokemon-utils";
 
 const GRID_COLUMNS = 3;
 const EXCLUDED_TYPES = ["unknown", "stellar"];
 
-
-function getTypeArtworkUrl(type: string) {
-  const artworkId = TYPE_ARTWORK_ID[type] ?? 25;
-  return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${artworkId}.png`;
-}
 
 function formatGenerationLabel(generationName?: string) {
   if (!generationName) return "Unknown Gen";

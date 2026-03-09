@@ -1,20 +1,23 @@
 "use client";
 
-import {useState, useMemo} from "react";
+import {useState, useMemo, useEffect} from "react";
 import {use} from "react";
-import Link from "next/link";
-import {TypeSidebar, PokemonCard, TypeBadge} from "@/shared/components";
+import {TypeSidebar} from "@/shared/components";
+import {Button} from "@/shared/components/ui/button";
+import {Menu, X} from "lucide-react";
+import {
+  TypePageHeader,
+  TypePageSearch,
+  TypePokemonGrid,
+  TypePagination,
+} from "./_components";
 import {useGetTypeDetail} from "@/shared/services/app/app.query";
-import {Input} from "@/shared/components/ui/input";
-import {Skeleton} from "@/shared/components/ui/skeleton";
 import {
   extractPokemonId,
   filterPokemonByName,
   paginate,
   calculateTotalPages,
-  formatPokemonName
 } from "@/lib/pokemon-utils";
-import {Search, ArrowLeft} from "lucide-react";
 
 const ITEMS_PER_PAGE = 25;
 
@@ -28,6 +31,7 @@ export default function TypePage({params}: PageProps) {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const {data: typeData, isLoading} = useGetTypeDetail(typeName);
 
@@ -35,15 +39,16 @@ export default function TypePage({params}: PageProps) {
   const allPokemon = useMemo(() => {
     if (!typeData?.pokemon) return [];
 
-    return typeData.pokemon.map(({pokemon}) => {
-      const id = extractPokemonId(pokemon.url);
-      return {
-        id,
-        name: pokemon.name,
-        sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
-        types: [typeName],
-      };
-    }).sort((a, b) => a.id - b.id); // Sort by ID
+    return typeData.pokemon
+      .map(({pokemon}) => {
+        const id = extractPokemonId(pokemon.url);
+        return {
+          id,
+          name: pokemon.name,
+          sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${id}.svg`,
+          types: [typeName],
+        };
+      })
   }, [typeData, typeName]);
 
   // Filter and paginate
@@ -55,7 +60,10 @@ export default function TypePage({params}: PageProps) {
     return paginate(filteredPokemon, currentPage, ITEMS_PER_PAGE);
   }, [filteredPokemon, currentPage]);
 
-  const totalPages = calculateTotalPages(filteredPokemon.length, ITEMS_PER_PAGE);
+  const totalPages = calculateTotalPages(
+    filteredPokemon.length,
+    ITEMS_PER_PAGE
+  );
 
   // Reset to page 1 when search changes
   const handleSearch = (value: string) => {
@@ -63,122 +71,107 @@ export default function TypePage({params}: PageProps) {
     setCurrentPage(1);
   };
 
+  useEffect(() => {
+    if (!isMobileSidebarOpen) return;
+
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMobileSidebarOpen(false);
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onEscape);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onEscape);
+    };
+  }, [isMobileSidebarOpen]);
+
+
   return (
-    <div className="flex h-full">
-      {/* Sidebar */}
-      <TypeSidebar/>
+    <>
+      <div className="flex h-full">
+        {/* Sidebar (desktop only) */}
+        <div className="hidden md:block">
+          <TypeSidebar/>
+        </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
-        <div className="border-b bg-card px-4 py-3">
-          <div className="max-w-2xl">
-            {/* Breadcrumb */}
-            <div className="flex items-center gap-2 mb-3">
-              <Link
-                href="/"
-                className="text-[11px] text-muted-foreground hover:text-foreground flex items-center gap-1"
-              >
-                <ArrowLeft className="h-3 w-3"/>
-                All Pokémon
-              </Link>
-            </div>
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Mobile drawer trigger */}
+          <div className="md:hidden border-b bg-card px-4 py-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsMobileSidebarOpen(true)}
+              className="gap-2"
+            >
+              <Menu className="h-4 w-4"/>
+              Browse Types
+            </Button>
+          </div>
 
-            {/* Type Header */}
-            <div className="flex items-center gap-3 mb-3">
-              <TypeBadge type={typeName} size="md"/>
-              <h1 className="text-lg font-bold capitalize">
-                {formatPokemonName(typeName)} Type
-              </h1>
-            </div>
+          {/* Hero Header with Search */}
+          <TypePageHeader
+            typeName={typeName}
+            totalPokemon={allPokemon.length}
+            isLoading={isLoading}
+          >
+            <TypePageSearch
+              searchTerm={searchTerm}
+              onSearchChange={handleSearch}
+              resultCount={filteredPokemon.length}
+            />
+          </TypePageHeader>
 
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"/>
-              <Input
-                type="text"
-                placeholder="Search Pokémon by name..."
-                value={searchTerm}
-                onChange={(e) => handleSearch(e.target.value)}
-                className="pl-9 h-9 text-sm"
-              />
-            </div>
-            <div className="mt-2 text-[11px] text-muted-foreground">
-              {isLoading ? (
-                "Loading..."
-              ) : (
-                <>
-                  Showing {filteredPokemon.length} Pokémon
-                  {searchTerm && ` matching "${searchTerm}"`}
-                </>
-              )}
-            </div>
+          {/* Pokémon Grid */}
+          <div className="flex-1 overflow-y-auto bg-background p-4 md:p-6">
+            <TypePokemonGrid
+              pokemon={paginatedPokemon}
+              isLoading={isLoading}
+              searchTerm={searchTerm}
+            />
+
+            {/* Pagination */}
+            <TypePagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
           </div>
         </div>
-
-        {/* Pokémon Grid */}
-        <div className="flex-1 overflow-y-auto p-4">
-          {isLoading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-              {Array.from({length: 25}).map((_, i) => (
-                <div key={i} className="border rounded p-3">
-                  <Skeleton className="w-20 h-20 mx-auto mb-2"/>
-                  <Skeleton className="h-4 w-16 mx-auto mb-1"/>
-                  <Skeleton className="h-3 w-24 mx-auto"/>
-                </div>
-              ))}
-            </div>
-          ) : paginatedPokemon.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">
-                {searchTerm
-                  ? `No Pokémon found matching "${searchTerm}"`
-                  : "No Pokémon found for this type"}
-              </p>
-            </div>
-          ) : (
-            <>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                {paginatedPokemon.map((poke) => (
-                  <PokemonCard
-                    key={poke.id}
-                    id={poke.id}
-                    name={poke.name}
-                    sprite={poke.sprite}
-                    types={poke.types}
-                    variant="grid"
-                  />
-                ))}
-              </div>
-
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="mt-6 flex items-center justify-center gap-2">
-                  <button
-                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                    disabled={currentPage === 1}
-                    className="px-3 py-1 text-sm border rounded hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Previous
-                  </button>
-                  <span className="text-sm text-muted-foreground">
-                    Page {currentPage} of {totalPages}
-                  </span>
-                  <button
-                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    disabled={currentPage === totalPages}
-                    className="px-3 py-1 text-sm border rounded hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Next
-                  </button>
-                </div>
-              )}
-            </>
-          )}
-        </div>
       </div>
-    </div>
+
+      {/* Mobile sidebar drawer */}
+      {isMobileSidebarOpen && (
+        <div className="fixed inset-0 z-50 md:hidden" role="dialog" aria-modal="true" aria-label="Type sidebar drawer">
+          <button
+            type="button"
+            aria-label="Close type sidebar"
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setIsMobileSidebarOpen(false)}
+          />
+          <div className="relative h-full w-72 max-w-[85vw] bg-card shadow-xl">
+            <div className="flex items-center justify-between border-b px-4 py-3">
+              <p className="text-sm font-semibold">Browse Types</p>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsMobileSidebarOpen(false)}
+                aria-label="Close drawer"
+              >
+                <X className="h-4 w-4"/>
+              </Button>
+            </div>
+            <TypeSidebar
+              className="w-full border-r-0"
+              onNavigate={() => setIsMobileSidebarOpen(false)}
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 }
-
-

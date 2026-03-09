@@ -1,11 +1,8 @@
 /**
  * Utility functions for Pokémon data processing
  */
+import {TYPE_ARTWORK_ID} from "@/lib/constants";
 
-/**
- * Extract Pokémon ID from PokeAPI URL
- * Example: https://pokeapi.co/api/v2/pokemon/25/ -> 25
- */
 export function extractPokemonId(url: string): number {
   const matches = url.match(/\/pokemon\/(\d+)\//);
   return matches ? parseInt(matches[1], 10) : 0;
@@ -118,7 +115,7 @@ export function getSpriteUrl(sprites: any): string {
 /**
  * Search filter for Pokémon
  */
-export function filterPokemonByName(pokemon: Array<{ name: string }>, searchTerm: string) {
+export function filterPokemonByName<T extends { name: string }>(pokemon: T[], searchTerm: string): T[] {
   if (!searchTerm.trim()) return pokemon;
   const search = searchTerm.toLowerCase().trim();
   return pokemon.filter(p => p.name.toLowerCase().includes(search));
@@ -140,3 +137,7 @@ export function calculateTotalPages(totalItems: number, itemsPerPage: number): n
   return Math.ceil(totalItems / itemsPerPage);
 }
 
+export function getTypeArtworkUrl(type: string) {
+  const artworkId = TYPE_ARTWORK_ID[type] ?? 25;
+  return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${artworkId}.png`;
+}
