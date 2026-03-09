@@ -35,9 +35,9 @@ export default function SidebarLayout({children}: {children: ReactNode}) {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col gap-2 overflow-hidden rounded-lg">
           {/* Mobile drawer trigger */}
-          <div className="md:hidden border-b bg-card px-4 py-3">
+          <div className="md:hidden bg-card px-4 py-3">
             <Button
               variant="outline"
               size="sm"

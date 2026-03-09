@@ -83,7 +83,7 @@ export default function TypePage({params}: PageProps) {
       </TypePageHeader>
 
       {/* Pokémon Grid */}
-      <div className="flex-1 overflow-y-auto bg-background p-4 md:p-6">
+      <div className="flex-1 overflow-y-auto bg-background">
         <TypePokemonGrid
           pokemon={paginatedPokemon}
           isLoading={isLoading}

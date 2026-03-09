@@ -32,7 +32,7 @@ export function PokemonCard({
       <Link
         href={`/pokemon/${name}`}
         className={cn(
-          "group relative block min-h-44 overflow-hidden rounded-2xl p-4 text-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
+          "group relative block min-h-66 overflow-hidden rounded-lg p-4 text-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
           className
         )}
       >

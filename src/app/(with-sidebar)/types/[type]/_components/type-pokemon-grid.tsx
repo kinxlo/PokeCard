@@ -50,7 +50,7 @@ export function TypePokemonGrid({
   }
 
   return (
-    <div className="grid grid-cols-2 mx-auto lg:grid-cols-3 gap-4 max-w-7xl">
+    <div className="grid grid-cols-1 sm:grid-cols-2 mx-auto xl:grid-cols-3 max-w-360 gap-2">
       {pokemon.map((poke) => (
         <PokemonCard
           key={poke.id}

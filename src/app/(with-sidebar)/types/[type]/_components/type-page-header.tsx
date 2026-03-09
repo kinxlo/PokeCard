@@ -20,7 +20,7 @@ export function TypePageHeader({
   const gradientClass = TYPE_GRADIENT[typeName] ?? TYPE_GRADIENT.normal;
 
   return (
-    <div className={`relative rounded-lg overflow-hidden bg-linear-to-br ${gradientClass}`}>
+    <div className={`relative rounded-lg px-4 lg:-px-0 overflow-hidden bg-linear-to-br ${gradientClass}`}>
       {/* Background Artwork */}
       <img
         src={getTypeArtworkUrl(typeName)}
@@ -30,7 +30,7 @@ export function TypePageHeader({
         aria-hidden="true"
       />
 
-      <div className="relative z-10 py-8 max-w-7xl mx-auto">
+      <div className="relative z-10 py-8 max-w-360 mx-auto">
         {/* Breadcrumb */}
         <Link
           href="/"
