@@ -1,20 +1,13 @@
-"use client"
+"use client";
 
-import {CustomButton, ThemeSwitcher} from "@/shared/components";
-import {useGetPokemon} from "@/shared/services/app/app.query";
+import {HomeTypeGrid} from "@/shared/components/home-type-grid";
 
 export default function Home() {
-  const {data} = useGetPokemon();
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 px-6 py-8">
-      <div className="flex items-center justify-end">
-        <ThemeSwitcher/>
+    <div className="h-full overflow-y-auto p-5">
+      <div className="mx-auto max-w-360">
+        <HomeTypeGrid/>
       </div>
-
-      <p>
-        Hello world! This is the home page.
-      </p>
-      <CustomButton>Click me</CustomButton>
     </div>
   );
 }
