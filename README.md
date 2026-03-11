@@ -4,13 +4,13 @@ A modern React/Next.js application for browsing Pokémon types, searching by nam
 
 ---
 
-## 📚 Documentation
+## Documentation
 
 - **[Architecture & Design](./docs/developers/architecture.md)** — Application structure, design patterns, data flow, and conventions
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Node.js 18+
@@ -47,9 +47,9 @@ pnpm lint
 
 ---
 
-## 🚀 Deployment
+## Deployment
 
-### Vercel (Recommended)
+### Vercel
 
 ```bash
 # Login to Vercel
@@ -61,7 +61,3 @@ vercel link
 # Deploy
 vercel --prod
 ```
-
-**Automatic:** Each git push triggers deployment  
-**Monitoring:** Vercel Web Analytics (free)
-
