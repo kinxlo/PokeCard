@@ -20,7 +20,7 @@ A modern React/Next.js application for browsing Pokémon types, searching by nam
 
 ```bash
 # Clone repository
-git clone <your-repo-url>
+git clone <the-repo-url>
 cd pokemon
 
 # Install dependencies
@@ -64,11 +64,4 @@ vercel --prod
 
 **Automatic:** Each git push triggers deployment  
 **Monitoring:** Vercel Web Analytics (free)
-
-### Environment Variables
-
-Create `.env.local`:
-```
-NEXT_PUBLIC_POKEAPI_URL=https://pokeapi.co/api/v2
-```
 
